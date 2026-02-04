@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚙️ Settings"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#075E54"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Server Configuration Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Server Configuration"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="15dp"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🌐 Server URL"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="5dp" />
+
+            <EditText
+                android:id="@+id/etServerUrl"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="https://joinus.cx"
+                android:inputType="textUri"
+                android:background="@drawable/button_secondary"
+                android:padding="10dp"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:layout_marginBottom="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔑 API Key"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="5dp" />
+
+            <EditText
+                android:id="@+id/etApiKey"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Enter your 64-character API key"
+                android:inputType="textPassword"
+                android:background="@drawable/button_secondary"
+                android:padding="10dp"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:layout_marginBottom="10dp" />
+
+            <Button
+                android:id="@+id/btnTestConnection"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Test Connection"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/button_primary" />
+        </LinearLayout>
+
+        <!-- Auto Sync Settings Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📱 Auto Sync Settings"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="15dp"
+            android:layout_marginBottom="20dp">
+
+            <CheckBox
+                android:id="@+id/cbAutoSync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enable Auto Sync"
+                android:textSize="14sp"
+                android:textColor="#333333"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sync Interval"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="5dp" />
+
+            <Spinner
+                android:id="@+id/spinnerSyncInterval"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/button_secondary"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <CheckBox
+                android:id="@+id/cbSyncOnStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sync on App Start"
+                android:textSize="14sp"
+                android:textColor="#333333" />
+        </LinearLayout>
+
+        <!-- Contact Prefix Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📊 Contact Prefix"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="15dp"
+            android:layout_marginBottom="20dp">
+
+            <EditText
+                android:id="@+id/etContactPrefix"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="JU_"
+                android:inputType="text"
+                android:background="@drawable/button_secondary"
+                android:padding="10dp"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contacts will be saved as: JU_001, JU_002"
+                android:textSize="12sp"
+                android:textColor="#888888" />
+        </LinearLayout>
+
+        <!-- Sync Status Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔄 Sync Status"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="15dp"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:id="@+id/tvLastSync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last sync: Never"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="5dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvPendingCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#FF9800" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pending"
+                        android:textSize="12sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvSyncedCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#25D366" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Synced"
+                        android:textSize="12sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvFailedCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#FF5252" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Failed"
+                        android:textSize="12sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSyncNow"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Sync Now"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/button_green"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Save Settings"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/button_primary"
+            android:layout_marginTop="10dp" />
+
+    </LinearLayout>
+
+</ScrollView>
