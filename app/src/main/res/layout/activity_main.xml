@@ -15,32 +15,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="20dp">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_launcher"
-            android:contentDescription="App Logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="WhatsApp Contact Saver"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#075E54"
-            android:layout_marginTop="10dp" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="by Wary Secure Ltd"
-            android:textSize="14sp"
-            android:textColor="#888888"
-            android:layout_marginTop="5dp" />
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_launcher"
+                android:contentDescription="App Logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WhatsApp Contact Saver"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#075E54"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="by Wary Secure Ltd"
+                android:textSize="14sp"
+                android:textColor="#888888"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="⚙️"
+            android:textSize="20sp"
+            android:background="@drawable/button_secondary" />
     </LinearLayout>
 
     <!-- Status Card -->
@@ -69,6 +85,162 @@
             android:textColor="#FF5252"
             android:layout_marginTop="5dp" />
     </LinearLayout>
+
+    <!-- Server Sync Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="───── Server Sync ─────"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/card_background"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/tvServerStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: ● Not Configured"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:id="@+id/tvServerUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Server: Not set"
+            android:textSize="12sp"
+            android:textColor="#888888"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:id="@+id/tvLastSync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last sync: Never"
+            android:textSize="12sp"
+            android:textColor="#888888" />
+    </LinearLayout>
+
+    <!-- Server Sync Stats -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="15dp"
+            android:gravity="center"
+            android:layout_marginEnd="5dp">
+
+            <TextView
+                android:id="@+id/serverPendingCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#FF9800" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pending"
+                android:textSize="11sp"
+                android:textColor="#666666" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="15dp"
+            android:gravity="center"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp">
+
+            <TextView
+                android:id="@+id/serverSyncedCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#25D366" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Synced"
+                android:textSize="11sp"
+                android:textColor="#666666" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="15dp"
+            android:gravity="center"
+            android:layout_marginStart="5dp">
+
+            <TextView
+                android:id="@+id/serverFailedCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#FF5252" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Failed"
+                android:textSize="11sp"
+                android:textColor="#666666" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSyncFromServer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="🔄 Sync from Server"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button_green"
+        android:layout_marginBottom="15dp" />
+
+    <!-- WhatsApp Scan Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="───── WhatsApp Scan ─────"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp" />
 
     <!-- Stats Card -->
     <LinearLayout
