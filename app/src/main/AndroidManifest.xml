@@ -28,6 +28,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ViewNumbersActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+
         <!-- Accessibility Service for scanning WhatsApp -->
         <service
             android:name=".WhatsAppScannerService"

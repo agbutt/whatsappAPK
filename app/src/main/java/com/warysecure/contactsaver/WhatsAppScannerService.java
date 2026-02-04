@@ -35,7 +35,10 @@ public class WhatsAppScannerService extends AccessibilityService {
 
     public static Set<String> detectedNumbers = new HashSet<>();
     public static Set<String> existingContacts = new HashSet<>();
+    public static Set<String> unsavedNumbers = new HashSet<>();
     public static int savedCount = 0;
+    // Sequential counter for CLAUD_XXX contact naming (resets to 1 at each scan session)
+    public static int contactSequenceNumber = 1;
     public static boolean isScanning = false;
 
     private Handler handler;
@@ -43,6 +46,7 @@ public class WhatsAppScannerService extends AccessibilityService {
     private int screenWidth;
     private int scrollCount = 0;
     private int maxScrolls = 100;
+    private int maxNumbersToSave = 2000;
     private int noNewNumbersCount = 0;
 
     private static WhatsAppScannerService instance;
@@ -125,7 +129,9 @@ public class WhatsAppScannerService extends AccessibilityService {
         scrollCount = 0;
         noNewNumbersCount = 0;
         detectedNumbers.clear();
+        unsavedNumbers.clear();
         savedCount = 0;
+        contactSequenceNumber = 1;
         loadExistingContacts();
         
         // Initial scan
@@ -202,12 +208,21 @@ public class WhatsAppScannerService extends AccessibilityService {
             
             // Validate: at least 10 digits
             if (normalized.replaceAll("\\+", "").length() >= 10) {
-                if (!existingContacts.contains(normalized) && !detectedNumbers.contains(normalized)) {
+                if (!detectedNumbers.contains(normalized)) {
                     detectedNumbers.add(normalized);
                     Log.d(TAG, "New number detected: " + normalized);
                     
-                    // Save to contacts immediately
-                    saveContact(normalized);
+                    // Check if number already exists or if we've reached the limit
+                    if (existingContacts.contains(normalized)) {
+                        unsavedNumbers.add(normalized);
+                        Log.d(TAG, "Number already exists in contacts: " + normalized);
+                    } else if (savedCount < maxNumbersToSave) {
+                        // Save to contacts immediately
+                        saveContact(normalized);
+                    } else {
+                        unsavedNumbers.add(normalized);
+                        Log.d(TAG, "Max save limit reached: " + normalized);
+                    }
                 }
             }
         }
@@ -225,8 +240,8 @@ public class WhatsAppScannerService extends AccessibilityService {
                     .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
                     .build());
 
-            // Add display name
-            String displayName = "WA " + phoneNumber.substring(Math.max(0, phoneNumber.length() - 4));
+            // Add display name with CLAUD_ prefix
+            String displayName = String.format("CLAUD_%03d", contactSequenceNumber);
             ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                     .withValue(ContactsContract.Data.MIMETYPE,
@@ -246,6 +261,7 @@ public class WhatsAppScannerService extends AccessibilityService {
 
             getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
             savedCount++;
+            contactSequenceNumber++;
             existingContacts.add(phoneNumber);
             
             Log.d(TAG, "Saved contact: " + displayName + " - " + phoneNumber);
@@ -298,18 +314,17 @@ public class WhatsAppScannerService extends AccessibilityService {
     }
 
     private void showSummary() {
-        int skipped = detectedNumbers.size() - savedCount;
         String message = "Scan Complete!\n\n" +
                 "📱 Numbers Detected: " + detectedNumbers.size() + "\n" +
                 "✅ Contacts Saved: " + savedCount + "\n" +
-                "⏭️ Already Existed: " + skipped;
+                "⏭️ Unsaved Numbers: " + unsavedNumbers.size();
         
         showToast(message);
         
         // Update floating window
         FloatingWindowService floatingService = FloatingWindowService.getInstance();
         if (floatingService != null) {
-            floatingService.showSummaryDialog(detectedNumbers.size(), savedCount, skipped);
+            floatingService.showSummaryDialog(detectedNumbers.size(), savedCount, unsavedNumbers.size());
         }
     }
 

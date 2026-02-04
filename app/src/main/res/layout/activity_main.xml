@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="15dp"
-        android:weightSum="2">
+        android:weightSum="3">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textSize="32sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="#075E54" />
 
@@ -101,7 +101,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Detected"
-                android:textSize="12sp"
+                android:textSize="11sp"
+                android:textColor="#666666" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="15dp"
+            android:gravity="center"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp">
+
+            <TextView
+                android:id="@+id/savedCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#25D366" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Saved"
+                android:textSize="11sp"
                 android:textColor="#666666" />
         </LinearLayout>
 
@@ -116,19 +144,19 @@
             android:layout_marginStart="5dp">
 
             <TextView
-                android:id="@+id/savedCount"
+                android:id="@+id/unsavedCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textSize="32sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
-                android:textColor="#25D366" />
+                android:textColor="#FF5252" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Saved"
-                android:textSize="12sp"
+                android:text="Unsaved"
+                android:textSize="11sp"
                 android:textColor="#666666" />
         </LinearLayout>
     </LinearLayout>
@@ -196,6 +224,16 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/button_green"
         android:layout_marginTop="10dp" />
+
+    <Button
+        android:id="@+id/btnViewDetails"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="View Detected Numbers"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button_secondary"
+        android:layout_marginTop="10dp"
+        android:enabled="false" />
 
 </LinearLayout>
 
