@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 public class WhatsAppScannerService extends AccessibilityService {
 
     private static final String TAG = "WhatsAppScanner";
+    private static final int SCROLL_DELAY_MS = 800;
+    private static final int RETRY_DELAY_MS = 1500;
     
     // Phone number patterns (international formats)
     private static final Pattern PHONE_PATTERN = Pattern.compile(
@@ -46,6 +48,7 @@ public class WhatsAppScannerService extends AccessibilityService {
     private int screenWidth;
     private int scrollCount = 0;
     private int maxScrolls = 100;
+    private int minScrolls = 50; // Minimum scrolls before allowing early stop
     private int maxNumbersToSave = 2000;
     private int noNewNumbersCount = 0;
 
@@ -276,8 +279,14 @@ public class WhatsAppScannerService extends AccessibilityService {
 
         scrollCount++;
         
-        // Stop conditions
-        if (scrollCount >= maxScrolls || noNewNumbersCount >= 10) {
+        // Stop conditions - only stop early if we've done at least minScrolls
+        if (scrollCount >= maxScrolls) {
+            stopScanning();
+            return;
+        }
+        
+        // Allow early stop only after minimum scrolls and if no new numbers found
+        if (scrollCount >= minScrolls && noNewNumbersCount >= 10) {
             stopScanning();
             return;
         }
@@ -300,15 +309,24 @@ public class WhatsAppScannerService extends AccessibilityService {
                 super.onCompleted(gestureDescription);
                 // Continue scrolling after a delay
                 handler.postDelayed(() -> {
-                    scanForPhoneNumbers();
-                    performAutoScroll();
-                }, 800);
+                    if (isScanning) {
+                        scanForPhoneNumbers();
+                        performAutoScroll();
+                    }
+                }, SCROLL_DELAY_MS);
             }
 
             @Override
             public void onCancelled(GestureDescription gestureDescription) {
                 super.onCancelled(gestureDescription);
-                Log.d(TAG, "Scroll gesture cancelled");
+                Log.d(TAG, "Scroll gesture cancelled, retrying...");
+                // Retry after a longer delay if gesture was cancelled
+                handler.postDelayed(() -> {
+                    if (isScanning) {
+                        scanForPhoneNumbers();
+                        performAutoScroll();
+                    }
+                }, RETRY_DELAY_MS);
             }
         }, null);
     }

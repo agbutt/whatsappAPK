@@ -53,7 +53,8 @@ export ANDROID_HOME=/path/to/android-sdk
 - Contacts are saved with prefix "CLAUD_001", "CLAUD_002", etc.
 - Already saved numbers are skipped and shown in the unsaved list
 - Maximum 2000 numbers can be saved per scan session
-- Maximum 100 scrolls per scan session
+- Automatically scrolls at least 50 times, up to 100 times maximum
+- Auto-retry on scroll failures for continuous operation
 - Use "View Detected Numbers" button to see detailed list with tabs
 
 ## Technical Details
