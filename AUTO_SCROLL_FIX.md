@@ -53,21 +53,26 @@ if (scrollCount >= minScrolls && noNewNumbersCount >= 10) {
 ```
 
 ### Fix 2: Auto-Retry on Cancelled Gestures
-Added retry logic in the `onCancelled` callback:
+Added retry logic in the `onCancelled` callback with configurable delay constants:
 ```java
+private static final int SCROLL_DELAY_MS = 800;
+private static final int RETRY_DELAY_MS = 1500;
+
 @Override
 public void onCancelled(GestureDescription gestureDescription) {
     super.onCancelled(gestureDescription);
     Log.d(TAG, "Scroll gesture cancelled, retrying...");
     // Retry after a longer delay if gesture was cancelled
     handler.postDelayed(() -> {
-        scanForPhoneNumbers();
-        performAutoScroll();
-    }, 1500);
+        if (isScanning) {
+            scanForPhoneNumbers();
+            performAutoScroll();
+        }
+    }, RETRY_DELAY_MS);
 }
 ```
 
-Now when a gesture is cancelled, the app waits 1.5 seconds and retries, maintaining the scroll chain.
+Now when a gesture is cancelled, the app waits 1.5 seconds (RETRY_DELAY_MS) and retries with a safety check to prevent concurrent scroll attempts, maintaining the scroll chain.
 
 ## Benefits
 
@@ -96,13 +101,17 @@ Now when a gesture is cancelled, the app waits 1.5 seconds and retries, maintain
 
 **Files Modified:**
 - `app/src/main/java/com/warysecure/contactsaver/WhatsAppScannerService.java`
-  - Added `minScrolls` field (line 49)
-  - Modified stop conditions (lines 280-290)
-  - Added retry logic in `onCancelled` callback (lines 316-324)
+  - Added delay constants: `SCROLL_DELAY_MS = 800`, `RETRY_DELAY_MS = 1500`
+  - Added `minScrolls = 50` field
+  - Modified stop conditions to enforce minimum scrolls
+  - Added retry logic in `onCancelled` callback with isScanning safety check
 - `README.md` - Updated documentation to reflect new behavior
 
 **Behavior Changes:**
 - Minimum scrolls: 0 → 50
+- Gesture cancellation: Stop scanning → Auto-retry with delay
+- Concurrent scroll prevention: None → isScanning checks in callbacks
+- Hardcoded delays → Named constants for maintainability
 - Gesture cancellation: Stop scanning → Auto-retry after 1.5s
 - Early stop: After 10 no-new-numbers → After 50 scrolls AND 10 no-new-numbers
 
