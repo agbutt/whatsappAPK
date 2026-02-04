@@ -37,7 +37,6 @@ public class SettingsActivity extends Activity {
 
     private EditText etServerUrl;
     private EditText etApiKey;
-    private EditText etContactPrefix;
     private CheckBox cbAutoSync;
     private CheckBox cbSyncOnStart;
     private Spinner spinnerSyncInterval;
@@ -64,7 +63,6 @@ public class SettingsActivity extends Activity {
     private void initViews() {
         etServerUrl = findViewById(R.id.etServerUrl);
         etApiKey = findViewById(R.id.etApiKey);
-        etContactPrefix = findViewById(R.id.etContactPrefix);
         cbAutoSync = findViewById(R.id.cbAutoSync);
         cbSyncOnStart = findViewById(R.id.cbSyncOnStart);
         spinnerSyncInterval = findViewById(R.id.spinnerSyncInterval);
@@ -89,7 +87,6 @@ public class SettingsActivity extends Activity {
         
         etServerUrl.setText(prefs.getString("server_url", "https://joinus.cx"));
         etApiKey.setText(prefs.getString("api_key", ""));
-        etContactPrefix.setText(prefs.getString("contact_prefix", "JU_"));
         cbAutoSync.setChecked(prefs.getBoolean("auto_sync_enabled", false));
         cbSyncOnStart.setChecked(prefs.getBoolean("sync_on_start", false));
         
@@ -228,15 +225,9 @@ public class SettingsActivity extends Activity {
     private void saveSettings() {
         String serverUrl = etServerUrl.getText().toString().trim();
         String apiKey = etApiKey.getText().toString().trim();
-        String contactPrefix = etContactPrefix.getText().toString().trim();
 
         if (serverUrl.isEmpty()) {
             Toast.makeText(this, "Please enter server URL", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (contactPrefix.isEmpty()) {
-            Toast.makeText(this, "Please enter contact prefix", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -255,7 +246,6 @@ public class SettingsActivity extends Activity {
         prefs.edit()
                 .putString("server_url", serverUrl)
                 .putString("api_key", apiKey)
-                .putString("contact_prefix", contactPrefix)
                 .putBoolean("auto_sync_enabled", autoSyncEnabled)
                 .putBoolean("sync_on_start", syncOnStart)
                 .putInt("sync_interval", syncInterval)
