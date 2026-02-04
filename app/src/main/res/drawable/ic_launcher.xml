@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#075E54"
+        android:pathData="M54,54m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0"/>
+    
+    <!-- Phone icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,30 L66,30 C68,30 70,32 70,34 L70,74 C70,76 68,78 66,78 L42,78 C40,78 38,76 38,74 L38,34 C38,32 40,30 42,30 Z M44,36 L64,36 L64,68 L44,68 Z M54,72 C55.7,72 57,73.3 57,75 C57,76.7 55.7,78 54,78 C52.3,78 51,76.7 51,75 C51,73.3 52.3,72 54,72 Z"/>
+    
+    <!-- Plus sign -->
+    <path
+        android:fillColor="#25D366"
+        android:pathData="M52,45 L56,45 L56,51 L62,51 L62,55 L56,55 L56,61 L52,61 L52,55 L46,55 L46,51 L52,51 Z"/>
+    
+</vector>

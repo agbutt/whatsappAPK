@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="whatsapp_dark">#075E54</color>
+    <color name="whatsapp_teal">#128C7E</color>
+    <color name="whatsapp_green">#25D366</color>
+    <color name="whatsapp_light">#DCF8C6</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#666666</color>
+    <color name="red">#FF5252</color>
+</resources>
