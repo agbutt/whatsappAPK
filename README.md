@@ -6,9 +6,11 @@ An Android app that automatically detects and saves unsaved phone numbers from W
 ## Features
 - 📱 Scans WhatsApp chat list for phone numbers
 - 🔄 Auto-scrolls through your entire chat list
-- ✅ Automatically saves new contacts
+- ✅ Automatically saves new contacts with CLAUD_XXX prefix
 - 📊 Shows summary of detected and saved numbers
 - 🎨 WhatsApp-themed UI
+- 📋 View detailed list of detected numbers with tabs (All/Saved/Unsaved)
+- 🔢 Supports up to 2000 numbers per scan
 
 ## How to Build
 
@@ -48,9 +50,11 @@ export ANDROID_HOME=/path/to/android-sdk
 
 ## Notes
 - Works with WhatsApp and WhatsApp Business
-- Contacts are saved with prefix "WA" + last 4 digits
-- Already saved numbers are skipped
+- Contacts are saved with prefix "CLAUD_001", "CLAUD_002", etc.
+- Already saved numbers are skipped and shown in the unsaved list
+- Maximum 2000 numbers can be saved per scan session
 - Maximum 100 scrolls per scan session
+- Use "View Detected Numbers" button to see detailed list with tabs
 
 ## Technical Details
 - Min SDK: Android 7.0 (API 24)

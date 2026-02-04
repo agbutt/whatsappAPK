@@ -26,10 +26,12 @@ public class MainActivity extends Activity {
     private TextView statusText;
     private TextView detectedCount;
     private TextView savedCount;
+    private TextView unsavedCount;
     private Button btnAccessibility;
     private Button btnOverlay;
     private Button btnContacts;
     private Button btnStartService;
+    private Button btnViewDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +52,12 @@ public class MainActivity extends Activity {
         statusText = findViewById(R.id.statusText);
         detectedCount = findViewById(R.id.detectedCount);
         savedCount = findViewById(R.id.savedCount);
+        unsavedCount = findViewById(R.id.unsavedCount);
         btnAccessibility = findViewById(R.id.btnAccessibility);
         btnOverlay = findViewById(R.id.btnOverlay);
         btnContacts = findViewById(R.id.btnContacts);
         btnStartService = findViewById(R.id.btnStartService);
+        btnViewDetails = findViewById(R.id.btnViewDetails);
     }
 
     private void setupClickListeners() {
@@ -61,6 +65,7 @@ public class MainActivity extends Activity {
         btnOverlay.setOnClickListener(v -> requestOverlayPermission());
         btnContacts.setOnClickListener(v -> requestContactsPermission());
         btnStartService.setOnClickListener(v -> startFloatingService());
+        btnViewDetails.setOnClickListener(v -> openViewNumbers());
     }
 
     private void updateUI() {
@@ -92,6 +97,10 @@ public class MainActivity extends Activity {
         // Update counts from service
         detectedCount.setText(String.valueOf(WhatsAppScannerService.detectedNumbers.size()));
         savedCount.setText(String.valueOf(WhatsAppScannerService.savedCount));
+        unsavedCount.setText(String.valueOf(WhatsAppScannerService.unsavedNumbers.size()));
+        
+        // Enable view details button only if there are detected numbers
+        btnViewDetails.setEnabled(WhatsAppScannerService.detectedNumbers.size() > 0);
     }
 
     private boolean isAccessibilityServiceEnabled() {
@@ -176,5 +185,10 @@ public class MainActivity extends Activity {
 
         // Minimize app
         moveTaskToBack(true);
+    }
+
+    private void openViewNumbers() {
+        Intent intent = new Intent(this, ViewNumbersActivity.class);
+        startActivity(intent);
     }
 }
