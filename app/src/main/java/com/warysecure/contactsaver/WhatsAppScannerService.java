@@ -46,6 +46,7 @@ public class WhatsAppScannerService extends AccessibilityService {
     private int screenWidth;
     private int scrollCount = 0;
     private int maxScrolls = 100;
+    private int minScrolls = 50; // Minimum scrolls before allowing early stop
     private int maxNumbersToSave = 2000;
     private int noNewNumbersCount = 0;
 
@@ -276,8 +277,14 @@ public class WhatsAppScannerService extends AccessibilityService {
 
         scrollCount++;
         
-        // Stop conditions
-        if (scrollCount >= maxScrolls || noNewNumbersCount >= 10) {
+        // Stop conditions - only stop early if we've done at least minScrolls
+        if (scrollCount >= maxScrolls) {
+            stopScanning();
+            return;
+        }
+        
+        // Allow early stop only after minimum scrolls and if no new numbers found
+        if (scrollCount >= minScrolls && noNewNumbersCount >= 10) {
             stopScanning();
             return;
         }
@@ -308,7 +315,12 @@ public class WhatsAppScannerService extends AccessibilityService {
             @Override
             public void onCancelled(GestureDescription gestureDescription) {
                 super.onCancelled(gestureDescription);
-                Log.d(TAG, "Scroll gesture cancelled");
+                Log.d(TAG, "Scroll gesture cancelled, retrying...");
+                // Retry after a longer delay if gesture was cancelled
+                handler.postDelayed(() -> {
+                    scanForPhoneNumbers();
+                    performAutoScroll();
+                }, 1500);
             }
         }, null);
     }
