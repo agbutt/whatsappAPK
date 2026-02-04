@@ -140,44 +140,6 @@
                 android:textColor="#333333" />
         </LinearLayout>
 
-        <!-- Contact Prefix Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📊 Contact Prefix"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_marginBottom="10dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/card_background"
-            android:padding="15dp"
-            android:layout_marginBottom="20dp">
-
-            <EditText
-                android:id="@+id/etContactPrefix"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="JU_"
-                android:inputType="text"
-                android:background="@drawable/button_secondary"
-                android:padding="10dp"
-                android:textColor="#333333"
-                android:textSize="14sp"
-                android:layout_marginBottom="5dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Contacts will be saved as: JU_001, JU_002"
-                android:textSize="12sp"
-                android:textColor="#888888" />
-        </LinearLayout>
-
         <!-- Sync Status Section -->
         <TextView
             android:layout_width="wrap_content"
