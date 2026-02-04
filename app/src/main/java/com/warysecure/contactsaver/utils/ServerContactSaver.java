@@ -108,11 +108,18 @@ public class ServerContactSaver {
                     String existingNumber = cursor.getString(numberIndex);
                     String normalizedExisting = existingNumber.replaceAll("[^0-9+]", "");
                     
-                    // Check if numbers match (handling various formats)
-                    if (normalizedExisting.equals(normalizedPhone) ||
-                        normalizedExisting.endsWith(normalizedPhone.substring(Math.max(0, normalizedPhone.length() - 10))) ||
-                        normalizedPhone.endsWith(normalizedExisting.substring(Math.max(0, normalizedExisting.length() - 10)))) {
+                    // Check if numbers match (exact match or last 10 digits match for both numbers >= 10 digits)
+                    if (normalizedExisting.equals(normalizedPhone)) {
                         return true;
+                    }
+                    
+                    // Compare last 10 digits only if both numbers are at least 10 digits
+                    if (normalizedExisting.length() >= 10 && normalizedPhone.length() >= 10) {
+                        String existingLast10 = normalizedExisting.substring(normalizedExisting.length() - 10);
+                        String phoneLast10 = normalizedPhone.substring(normalizedPhone.length() - 10);
+                        if (existingLast10.equals(phoneLast10)) {
+                            return true;
+                        }
                     }
                 } while (cursor.moveToNext());
             }

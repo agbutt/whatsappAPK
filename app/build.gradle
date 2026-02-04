@@ -43,6 +43,6 @@ dependencies {
     // Background Work
     implementation 'androidx.work:work-runtime:2.9.0'
     
-    // Encrypted Storage
+    // Encrypted Storage (Note: alpha version used as stable 1.0.0 is not compatible with current setup)
     implementation 'androidx.security:security-crypto:1.1.0-alpha06'
 }

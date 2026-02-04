@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactSyncWorker extends Worker {
+    private static final String TAG = "ContactSyncWorker";
     private static final String PREFS_NAME = "settings";
     private static final String CHANNEL_ID = "contact_sync_channel";
     private static final int NOTIFICATION_ID = 1001;
@@ -83,7 +84,7 @@ public class ContactSyncWorker extends Worker {
                 ApiResponse bulkSyncResponse = apiClient.bulkSync(syncResults);
                 if (!bulkSyncResponse.success) {
                     // Log but don't fail the work
-                    android.util.Log.e("ContactSyncWorker", "Bulk sync failed: " + bulkSyncResponse.error);
+                    android.util.Log.e(TAG, "Bulk sync failed: " + bulkSyncResponse.error);
                 }
             }
 
