@@ -109,10 +109,9 @@ Now when a gesture is cancelled, the app waits 1.5 seconds (RETRY_DELAY_MS) and 
 
 **Behavior Changes:**
 - Minimum scrolls: 0 → 50
-- Gesture cancellation: Stop scanning → Auto-retry with delay
+- Gesture cancellation: Stop scanning → Auto-retry after 1.5s delay
 - Concurrent scroll prevention: None → isScanning checks in callbacks
 - Hardcoded delays → Named constants for maintainability
-- Gesture cancellation: Stop scanning → Auto-retry after 1.5s
 - Early stop: After 10 no-new-numbers → After 50 scrolls AND 10 no-new-numbers
 
 ---
