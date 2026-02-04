@@ -37,10 +37,7 @@ captures/
 # IntelliJ
 *.iml
 .idea/
-misc.xml
-deploymentTargetSelector.xml
 .gradletasknamecache.txt
-local.properties
 
 # Keystore files
 *.jks
