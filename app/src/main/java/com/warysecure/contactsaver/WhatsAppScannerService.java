@@ -37,6 +37,7 @@ public class WhatsAppScannerService extends AccessibilityService {
     public static Set<String> existingContacts = new HashSet<>();
     public static Set<String> unsavedNumbers = new HashSet<>();
     public static int savedCount = 0;
+    // Sequential counter for CLAUD_XXX contact naming (resets to 1 at each scan session)
     public static int contactSequenceNumber = 1;
     public static boolean isScanning = false;
 
