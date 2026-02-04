@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 public class WhatsAppScannerService extends AccessibilityService {
 
     private static final String TAG = "WhatsAppScanner";
+    private static final int SCROLL_DELAY_MS = 800;
+    private static final int RETRY_DELAY_MS = 1500;
     
     // Phone number patterns (international formats)
     private static final Pattern PHONE_PATTERN = Pattern.compile(
@@ -307,9 +309,11 @@ public class WhatsAppScannerService extends AccessibilityService {
                 super.onCompleted(gestureDescription);
                 // Continue scrolling after a delay
                 handler.postDelayed(() -> {
-                    scanForPhoneNumbers();
-                    performAutoScroll();
-                }, 800);
+                    if (isScanning) {
+                        scanForPhoneNumbers();
+                        performAutoScroll();
+                    }
+                }, SCROLL_DELAY_MS);
             }
 
             @Override
@@ -318,9 +322,11 @@ public class WhatsAppScannerService extends AccessibilityService {
                 Log.d(TAG, "Scroll gesture cancelled, retrying...");
                 // Retry after a longer delay if gesture was cancelled
                 handler.postDelayed(() -> {
-                    scanForPhoneNumbers();
-                    performAutoScroll();
-                }, 1500);
+                    if (isScanning) {
+                        scanForPhoneNumbers();
+                        performAutoScroll();
+                    }
+                }, RETRY_DELAY_MS);
             }
         }, null);
     }
