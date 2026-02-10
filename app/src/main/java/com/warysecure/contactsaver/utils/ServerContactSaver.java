@@ -4,6 +4,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -11,8 +12,13 @@ import android.provider.ContactsContract;
 import com.warysecure.contactsaver.models.ServerContact;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ServerContactSaver {
+    private static final String PREFS_NAME = "settings";
+    private static final String KEY_API_SAVED_PHONES = "api_saved_phones";
+
     private Context context;
 
     public ServerContactSaver(Context context) {
@@ -38,14 +44,22 @@ public class ServerContactSaver {
             // Check if contact with this phone number already exists
             String existingContactId = findContactByPhone(contact.phone);
             
+            String resultId;
             if (existingContactId != null) {
                 // UPDATE existing contact name
                 updateContactName(existingContactId, contactName);
-                return existingContactId;
+                resultId = existingContactId;
             } else {
                 // CREATE new contact
-                return createNewContact(contactName, contact.phone, contact.email);
+                resultId = createNewContact(contactName, contact.phone, contact.email);
             }
+
+            // Track this phone number as API-saved
+            if (resultId != null) {
+                trackApiSavedPhone(contact.phone, contactName);
+            }
+
+            return resultId;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,5 +255,51 @@ public class ServerContactSaver {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Track a phone number as saved through the API.
+     * Stores phone and name as "phone||name" in SharedPreferences StringSet.
+     */
+    private void trackApiSavedPhone(String phone, String name) {
+        try {
+            SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            Set<String> existing = prefs.getStringSet(KEY_API_SAVED_PHONES, new HashSet<>());
+            // Create a mutable copy since getStringSet may return an immutable set
+            Set<String> updated = new HashSet<>(existing);
+
+            // Remove any old entry for the same phone (in case name changed)
+            String normalizedPhone = phone.replaceAll("[^+0-9]", "");
+            Set<String> toRemove = new HashSet<>();
+            for (String entry : updated) {
+                String entryPhone = entry.contains("||") ? entry.split("\\|\\|")[0] : entry;
+                String normalizedEntry = entryPhone.replaceAll("[^+0-9]", "");
+                if (normalizedEntry.equals(normalizedPhone) || phonesMatchLast10(normalizedEntry, normalizedPhone)) {
+                    toRemove.add(entry);
+                }
+            }
+            updated.removeAll(toRemove);
+
+            updated.add(phone + "||" + name);
+            prefs.edit().putStringSet(KEY_API_SAVED_PHONES, updated).apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean phonesMatchLast10(String a, String b) {
+        if (a.length() >= 10 && b.length() >= 10) {
+            return a.substring(a.length() - 10).equals(b.substring(b.length() - 10));
+        }
+        return false;
+    }
+
+    /**
+     * Get all API-saved phone entries from SharedPreferences.
+     * Each entry is stored as "phone||name".
+     */
+    public static Set<String> getApiSavedPhones(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return new HashSet<>(prefs.getStringSet(KEY_API_SAVED_PHONES, new HashSet<>()));
     }
 }
