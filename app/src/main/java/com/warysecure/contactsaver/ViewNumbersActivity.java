@@ -248,7 +248,7 @@ public class ViewNumbersActivity extends Activity {
             nameView.setText(contactName);
             nameView.setTextSize(16);
             nameView.setTextColor(Color.parseColor("#333333"));
-            nameView.setTextStyle(android.graphics.Typeface.BOLD);
+            nameView.setTypeface(null, android.graphics.Typeface.BOLD);
             infoContainer.addView(nameView);
             
             // Phone number (smaller, below name)

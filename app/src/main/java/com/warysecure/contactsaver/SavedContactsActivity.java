@@ -93,8 +93,8 @@ public class SavedContactsActivity extends Activity {
                     String name = cursor.getString(nameIndex);
                     boolean hasPhone = cursor.getInt(hasPhoneIndex) > 0;
 
-                    // Filter contacts saved from API (those without the old prefix or with actual names)
-                    // We want to show all contacts, but especially those saved through API
+                    // Show all contacts with phone numbers
+                    // This includes contacts saved through API as well as other device contacts
                     if (hasPhone && name != null) {
                         // Get phone number for this contact
                         String phoneNumber = getPhoneNumber(contactId);
