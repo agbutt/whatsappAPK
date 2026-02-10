@@ -230,6 +230,15 @@
         android:text="🔄 Sync from Server"
         android:textColor="#FFFFFF"
         android:background="@drawable/button_green"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/btnViewSavedContacts"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="📋 View Saved Contacts"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button_secondary"
         android:layout_marginBottom="15dp" />
 
     <!-- WhatsApp Scan Section -->

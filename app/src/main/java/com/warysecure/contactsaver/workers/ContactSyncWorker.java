@@ -64,6 +64,7 @@ public class ContactSyncWorker extends Worker {
 
             // Process contacts
             List<SyncResult> syncResults = new ArrayList<>();
+            List<String> savedContactNames = new ArrayList<>();
             int savedCount = 0;
             int failedCount = 0;
 
@@ -73,6 +74,11 @@ public class ContactSyncWorker extends Worker {
                 if (deviceContactId != null) {
                     syncResults.add(new SyncResult(contact.id, deviceContactId, "synced"));
                     savedCount++;
+                    // Store the contact name for notification
+                    String name = (contact.name != null && !contact.name.isEmpty()) 
+                        ? contact.name 
+                        : contact.phone;
+                    savedContactNames.add(name);
                 } else {
                     syncResults.add(new SyncResult(contact.id, null, "failed"));
                     failedCount++;
@@ -93,7 +99,7 @@ public class ContactSyncWorker extends Worker {
 
             // Show notification if contacts were synced
             if (savedCount > 0 || failedCount > 0) {
-                showNotification(savedCount, failedCount);
+                showNotification(savedContactNames, failedCount);
             }
 
             return Result.success();
@@ -109,7 +115,7 @@ public class ContactSyncWorker extends Worker {
         prefs.edit().putLong("last_sync_time", System.currentTimeMillis()).apply();
     }
 
-    private void showNotification(int savedCount, int failedCount) {
+    private void showNotification(List<String> savedContactNames, int failedCount) {
         Context context = getApplicationContext();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -126,19 +132,61 @@ public class ContactSyncWorker extends Worker {
 
         // Build notification
         String title = "Contact Sync Complete";
-        String message;
-        if (failedCount > 0) {
-            message = savedCount + " contacts saved, " + failedCount + " failed";
-        } else {
-            message = savedCount + " new contacts saved";
-        }
-
+        int savedCount = savedContactNames.size();
+        
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle(title)
-                .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
+
+        // Show contact names in notification
+        if (savedCount == 1) {
+            // Single contact - show name in content text
+            String message = savedContactNames.get(0) + " saved";
+            if (failedCount > 0) {
+                message += ", " + failedCount + " failed";
+            }
+            builder.setContentText(message);
+        } else if (savedCount > 1 && savedCount <= 5) {
+            // Multiple contacts (up to 5) - use InboxStyle to show all names
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            inboxStyle.setBigContentTitle(savedCount + " contacts saved");
+            
+            for (String name : savedContactNames) {
+                inboxStyle.addLine("✓ " + name);
+            }
+            
+            if (failedCount > 0) {
+                inboxStyle.setSummaryText(failedCount + " failed");
+            }
+            
+            builder.setStyle(inboxStyle);
+            builder.setContentText(savedCount + " contacts saved");
+        } else if (savedCount > 5) {
+            // Many contacts - show first 5 and count
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            inboxStyle.setBigContentTitle(savedCount + " contacts saved");
+            
+            for (int i = 0; i < 5; i++) {
+                inboxStyle.addLine("✓ " + savedContactNames.get(i));
+            }
+            
+            int remaining = savedCount - 5;
+            String summaryText = "+" + remaining + " more";
+            if (failedCount > 0) {
+                summaryText += ", " + failedCount + " failed";
+            }
+            inboxStyle.setSummaryText(summaryText);
+            
+            builder.setStyle(inboxStyle);
+            builder.setContentText(savedCount + " contacts saved");
+        }
+        
+        // If only failures
+        if (savedCount == 0 && failedCount > 0) {
+            builder.setContentText(failedCount + " contacts failed to save");
+        }
 
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
