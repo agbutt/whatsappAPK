@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     private Button btnViewDetails;
     private Button btnSettings;
     private Button btnSyncFromServer;
+    private Button btnViewSavedContacts;
     private TextView tvServerStatus;
     private TextView tvServerUrl;
     private TextView tvLastSync;
@@ -85,6 +86,7 @@ public class MainActivity extends Activity {
         btnViewDetails = findViewById(R.id.btnViewDetails);
         btnSettings = findViewById(R.id.btnSettings);
         btnSyncFromServer = findViewById(R.id.btnSyncFromServer);
+        btnViewSavedContacts = findViewById(R.id.btnViewSavedContacts);
         tvServerStatus = findViewById(R.id.tvServerStatus);
         tvServerUrl = findViewById(R.id.tvServerUrl);
         tvLastSync = findViewById(R.id.tvLastSync);
@@ -101,6 +103,7 @@ public class MainActivity extends Activity {
         btnViewDetails.setOnClickListener(v -> openViewNumbers());
         btnSettings.setOnClickListener(v -> openSettings());
         btnSyncFromServer.setOnClickListener(v -> performServerSync());
+        btnViewSavedContacts.setOnClickListener(v -> openSavedContacts());
     }
 
     private void updateUI() {
@@ -364,6 +367,11 @@ public class MainActivity extends Activity {
 
     private void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void openSavedContacts() {
+        Intent intent = new Intent(this, SavedContactsActivity.class);
         startActivity(intent);
     }
 }

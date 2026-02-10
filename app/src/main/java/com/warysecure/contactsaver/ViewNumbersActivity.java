@@ -1,8 +1,12 @@
 package com.warysecure.contactsaver;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -139,12 +143,74 @@ public class ViewNumbersActivity extends Activity {
         int index = 0;
         for (String number : numbersToDisplay) {
             index++;
-            View numberCard = createNumberCard(number, index, !WhatsAppScannerService.unsavedNumbers.contains(number));
+            boolean isSaved = !WhatsAppScannerService.unsavedNumbers.contains(number);
+            String contactName = isSaved ? getContactNameByPhone(number) : null;
+            View numberCard = createNumberCard(number, contactName, index, isSaved);
             numberListContainer.addView(numberCard);
         }
     }
 
-    private View createNumberCard(String phoneNumber, int index, boolean isSaved) {
+    /**
+     * Get contact name from device contacts by phone number.
+     * Returns null if contact not found or no permission.
+     */
+    private String getContactNameByPhone(String phoneNumber) {
+        // Check permission
+        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
+        
+        // Normalize phone number
+        String normalizedPhone = phoneNumber.replaceAll("[^+0-9]", "");
+        
+        Cursor cursor = null;
+        try {
+            cursor = getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    new String[]{
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                        ContactsContract.CommonDataKinds.Phone.NUMBER
+                    },
+                    null,
+                    null,
+                    null
+            );
+
+            if (cursor != null && cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                
+                do {
+                    String existingNumber = cursor.getString(numberIndex);
+                    String normalizedExisting = existingNumber.replaceAll("[^+0-9]", "");
+                    
+                    // Check if numbers match
+                    if (normalizedExisting.equals(normalizedPhone)) {
+                        return cursor.getString(nameIndex);
+                    }
+                    
+                    // Compare last 10 digits for international format differences
+                    if (normalizedExisting.length() >= 10 && normalizedPhone.length() >= 10) {
+                        String existingLast10 = normalizedExisting.substring(normalizedExisting.length() - 10);
+                        String phoneLast10 = normalizedPhone.substring(normalizedPhone.length() - 10);
+                        if (existingLast10.equals(phoneLast10)) {
+                            return cursor.getString(nameIndex);
+                        }
+                    }
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        
+        return null;
+    }
+
+    private View createNumberCard(String phoneNumber, String contactName, int index, boolean isSaved) {
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.HORIZONTAL);
         card.setBackgroundColor(Color.WHITE);
@@ -166,18 +232,41 @@ public class ViewNumbersActivity extends Activity {
         indexView.setWidth(60);
         card.addView(indexView);
         
-        // Number
-        TextView numberView = new TextView(this);
-        numberView.setText(phoneNumber);
-        numberView.setTextSize(16);
-        numberView.setTextColor(Color.parseColor("#333333"));
-        LinearLayout.LayoutParams numberParams = new LinearLayout.LayoutParams(
+        // Contact info container (name + number)
+        LinearLayout infoContainer = new LinearLayout(this);
+        infoContainer.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams infoParams = new LinearLayout.LayoutParams(
             0,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             1
         );
-        numberView.setLayoutParams(numberParams);
-        card.addView(numberView);
+        infoContainer.setLayoutParams(infoParams);
+        
+        // Contact name (if available)
+        if (contactName != null && !contactName.isEmpty()) {
+            TextView nameView = new TextView(this);
+            nameView.setText(contactName);
+            nameView.setTextSize(16);
+            nameView.setTextColor(Color.parseColor("#333333"));
+            nameView.setTypeface(null, android.graphics.Typeface.BOLD);
+            infoContainer.addView(nameView);
+            
+            // Phone number (smaller, below name)
+            TextView numberView = new TextView(this);
+            numberView.setText(phoneNumber);
+            numberView.setTextSize(14);
+            numberView.setTextColor(Color.parseColor("#666666"));
+            infoContainer.addView(numberView);
+        } else {
+            // No name - just show phone number
+            TextView numberView = new TextView(this);
+            numberView.setText(phoneNumber);
+            numberView.setTextSize(16);
+            numberView.setTextColor(Color.parseColor("#333333"));
+            infoContainer.addView(numberView);
+        }
+        
+        card.addView(infoContainer);
         
         // Status badge
         TextView statusView = new TextView(this);
